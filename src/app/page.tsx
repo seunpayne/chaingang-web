@@ -1,3 +1,5 @@
+import ContactForm from '@/components/ContactForm'
+
 export default function HomePage() {
   return (
     <main className="flex-1">
@@ -172,6 +174,11 @@ export default function HomePage() {
                 {s.label}
               </a>
             ))}
+          </div>
+
+          {/* Contact Form */}
+          <div className="mt-12">
+            <ContactForm />
           </div>
         </div>
       </section>
