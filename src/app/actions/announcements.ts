@@ -60,13 +60,14 @@ export async function updateAnnouncement(id: string, data: Partial<AnnouncementI
   return { success: true }
 }
 
-export async function deleteAnnouncement(id: string) {
+export async function deleteAnnouncement(formData: FormData) {
   'use server'
 
   if (!(await isAdmin())) {
     return
   }
 
+  const id = formData.get('id') as string
   const supabase = await createServiceClient()
   await supabase
     .from('announcements')

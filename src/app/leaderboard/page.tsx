@@ -2,19 +2,6 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
 
-interface LeaderboardEntry {
-  id: string
-  strava_athlete_id: number
-  display_name: string
-  strava_handle: string
-  avatar_url: string | null
-  total_km: number
-  total_elevation_m: number
-  rides_attended: number
-  kom_qom_count: number
-  synced_at: string
-}
-
 type TabKey = 'km' | 'elevation' | 'rides' | 'koms'
 
 const TABS: { key: TabKey; label: string }[] = [
@@ -210,7 +197,7 @@ export default async function LeaderboardPage({
                             <div className="w-8 h-8 rounded-full bg-forest text-cream flex items-center justify-center text-xs font-bold">
                               {entry.display_name
                                 .split(' ')
-                                .map((n) => n[0])
+                                .map((n: string) => n[0])
                                 .join('')
                                 .slice(0, 2)
                                 .toUpperCase()}

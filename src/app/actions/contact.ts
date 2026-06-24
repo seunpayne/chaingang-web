@@ -1,6 +1,5 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
 import { headers } from 'next/headers'
 
 // Simple in-memory rate limiter (resets on deploy — acceptable for MVP)
@@ -68,7 +67,7 @@ export async function submitContactForm(data: ContactInput) {
   const forwardedFor = headersList.get('x-forwarded-for')
   const ip = forwardedFor?.split(',')[0]?.trim() || 'unknown'
 
-  const { allowed, remaining } = getRateLimitInfo(ip)
+  const { allowed } = getRateLimitInfo(ip)
   if (!allowed) {
     return {
       error:

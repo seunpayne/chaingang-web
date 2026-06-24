@@ -12,7 +12,7 @@ function RegisterForm() {
 
   const [validating, setValidating] = useState(true)
   const [tokenValid, setTokenValid] = useState(false)
-  const [inviteEmail, setInviteEmail] = useState('')
+  const setInviteEmail = useState('')[1]
   const [tokenError, setTokenError] = useState('')
 
   const [email, setEmail] = useState('')
@@ -31,7 +31,7 @@ function RegisterForm() {
 
     async function validate() {
       try {
-        const res = await fetch(`/api/invites?token=${encodeURIComponent(token)}`)
+        const res = await fetch(`/api/invites?token=${encodeURIComponent(token as string)}`)
         const data = await res.json()
 
         if (data.valid) {
@@ -104,7 +104,7 @@ function RegisterForm() {
       }
 
       router.push('/dashboard?registered=true')
-    } catch (err) {
+    } catch {
       setError('Registration failed. Please try again.')
       setRegistering(false)
     }

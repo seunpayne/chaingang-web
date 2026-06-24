@@ -27,7 +27,6 @@ export async function GET() {
   }
 
   // Fetch emails from auth.admin (requires service role)
-  const userIds = roles.map((r) => r.user_id)
   const { data: users, error: usersError } = await supabase.auth.admin.listUsers()
 
   if (usersError) {

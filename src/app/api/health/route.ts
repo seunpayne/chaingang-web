@@ -37,7 +37,7 @@ export async function GET() {
     const supabase = await createClient()
 
     // Check DB connectivity
-    const { data: dbCheck, error: dbError } = await supabase
+    const { error: dbError } = await supabase
       .from('sync_log')
       .select('id')
       .limit(1)
