@@ -2,26 +2,101 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Inter:opsz,wght@14..32,400..700&family=JetBrains+Mono:wght@400;500&display=swap');
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    @apply font-body text-forest bg-cream;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display text-forest;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .btn-primary {
+    @apply bg-gold text-forest font-display font-bold px-6 py-3 rounded 
+           hover:bg-gold-600 transition-colors duration-200
+           focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply bg-forest text-cream font-display font-bold px-6 py-3 rounded
+           hover:bg-forest-600 transition-colors duration-200
+           focus:outline-none focus:ring-2 focus:ring-forest focus:ring-offset-2;
+  }
+
+  .btn-danger {
+    @apply bg-red text-white font-display font-bold px-6 py-3 rounded
+           hover:bg-red-600 transition-colors duration-200
+           focus:outline-none focus:ring-2 focus:ring-red focus:ring-offset-2;
+  }
+
+  .pill-event {
+    @apply inline-block px-3 py-1 rounded-full text-sm font-semibold
+           bg-forest text-cream;
+  }
+
+  .pill-urgent {
+    @apply inline-block px-3 py-1 rounded-full text-sm font-semibold
+           bg-red text-white;
+  }
+
+  .pill-info {
+    @apply inline-block px-3 py-1 rounded-full text-sm font-semibold
+           bg-gray-500 text-white;
+  }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+/* Ticker animation */
+@keyframes ticker-scroll {
+  0% {
+    transform: translateX(100%);
   }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.ticker-animate {
+  animation: ticker-scroll 30s linear infinite;
+}
+
+/* Rich text content styling */
+.rich-text-content h2 {
+  @apply text-2xl font-display font-bold text-forest mt-8 mb-4;
+}
+
+.rich-text-content h3 {
+  @apply text-xl font-display font-semibold text-forest mt-6 mb-3;
+}
+
+.rich-text-content p {
+  @apply mb-4 leading-relaxed;
+}
+
+.rich-text-content ul {
+  @apply list-disc pl-6 mb-4;
+}
+
+.rich-text-content ol {
+  @apply list-decimal pl-6 mb-4;
+}
+
+.rich-text-content a {
+  @apply text-gold-600 underline hover:text-gold;
+}
+
+.rich-text-content img {
+  @apply rounded-lg my-4 max-w-full;
+}
+
+.rich-text-content blockquote {
+  @apply border-l-4 border-gold pl-4 italic my-4 text-forest-300;
+}
+
+.rich-text-content code {
+  @apply font-mono bg-forest-50 px-1 py-0.5 rounded text-sm;
 }

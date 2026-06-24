@@ -1,101 +1,257 @@
-import Image from "next/image";
-
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <main className="flex-1">
+      {/* Header / Navigation */}
+      <header className="bg-forest text-cream">
+        <nav className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="font-display text-2xl font-bold text-gold">
+              CHAINGANG
+            </span>
+            <span className="text-sm text-cream-200 hidden sm:inline">
+              CYCLING CLUB ABUJA
+            </span>
+          </div>
+          <div className="flex items-center gap-4">
+            <a href="#about" className="hover:text-gold transition-colors text-sm">
+              About
+            </a>
+            <a href="#values" className="hover:text-gold transition-colors text-sm">
+              Values
+            </a>
+            <a href="#activities" className="hover:text-gold transition-colors text-sm">
+              Ride
+            </a>
+            <a href="#contact" className="hover:text-gold transition-colors text-sm">
+              Contact
+            </a>
+            <a
+              href="/login"
+              className="btn-primary text-sm px-4 py-2"
+            >
+              Member Login
+            </a>
+          </div>
+        </nav>
+      </header>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* Hero Section */}
+      <section className="relative bg-forest py-24">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <h1 className="font-display text-5xl sm:text-6xl md:text-7xl font-black text-gold mb-6">
+            Chains, Pedals &amp; Lungs
+          </h1>
+          <p className="text-cream text-lg sm:text-xl max-w-2xl mx-auto mb-10">
+            Nigeria&apos;s foremost mountain biking club — building community,
+            fitness, and adventure on the trails of Abuja since 2016.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="#about" className="btn-primary">
+              Learn More
+            </a>
+            <a href="#contact" className="btn-secondary">
+              Get In Touch
+            </a>
+          </div>
+          {/* Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 max-w-3xl mx-auto">
+            <div className="text-center">
+              <div className="font-display text-3xl font-bold text-gold">120+</div>
+              <div className="text-cream-200 text-sm mt-1">Active Members</div>
+            </div>
+            <div className="text-center">
+              <div className="font-display text-3xl font-bold text-gold">2016</div>
+              <div className="text-cream-200 text-sm mt-1">Established</div>
+            </div>
+            <div className="text-center">
+              <div className="font-display text-3xl font-bold text-gold">Sat</div>
+              <div className="text-cream-200 text-sm mt-1">Group Ride Day</div>
+            </div>
+            <div className="text-center">
+              <div className="font-display text-3xl font-bold text-gold">Free</div>
+              <div className="text-cream-200 text-sm mt-1">Cycling Clinics</div>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      </section>
+
+      {/* About / Who We Are */}
+      <section id="about" className="py-20 bg-cream">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="font-display text-4xl font-bold text-forest text-center mb-12">
+            Who We Are
+          </h2>
+          <div className="max-w-3xl mx-auto text-center">
+            <p className="text-lg mb-6 leading-relaxed">
+              Chaingang Cycling Club is Abuja&apos;s premier mountain biking 
+              community. We started in 2016 with four riders and a shared 
+              passion for off-road cycling. Today, we&apos;re 120+ members strong — 
+              a diverse group united by chains, pedals, and lungs.
+            </p>
+            <p className="text-lg leading-relaxed">
+              We ride every Saturday through the rugged trails surrounding the 
+              FCT. We host free cycling clinics for beginners. We give back to 
+              our community through development projects. And we do it all 
+              together — because the chain is only as strong as its weakest link.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Values */}
+      <section id="values" className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="font-display text-4xl font-bold text-forest text-center mb-12">
+            Our Values
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {values.map((v) => (
+              <div key={v.title} className="bg-cream-50 p-8 rounded-lg border border-cream-200">
+                <h3 className="font-display text-2xl font-bold text-forest mb-3">
+                  {v.title}
+                </h3>
+                <p className="text-forest-600">{v.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Activities */}
+      <section id="activities" className="py-20 bg-cream">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="font-display text-4xl font-bold text-forest text-center mb-12">
+            What We Do
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {activities.map((a) => (
+              <div key={a.title} className="bg-white p-6 rounded-lg border border-cream-200">
+                <h3 className="font-display text-xl font-bold text-forest mb-2">
+                  {a.title}
+                </h3>
+                <p className="text-gold font-semibold text-sm mb-3">{a.schedule}</p>
+                <p className="text-forest-600 text-sm">{a.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact */}
+      <section id="contact" className="py-20 bg-forest text-cream">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <h2 className="font-display text-4xl font-bold text-gold mb-12">
+            Get In Touch
+          </h2>
+          <div className="max-w-xl mx-auto space-y-4">
+            <p>
+              <a href="mailto:info@chaingang.ng" className="text-gold hover:underline">
+                info@chaingang.ng
+              </a>
+            </p>
+            <p>
+              <a href="tel:+2347066399546" className="text-gold hover:underline">
+                +234 706 639 9546
+              </a>
+            </p>
+            <p className="text-cream-200">
+              3 Agapitus Street, Rainbow Estate, Pyakkasa, Abuja
+            </p>
+          </div>
+          {/* Social Links */}
+          <div className="flex justify-center gap-6 mt-8">
+            {socialLinks.map((s) => (
+              <a
+                key={s.label}
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-cream-200 hover:text-gold transition-colors"
+                aria-label={s.label}
+              >
+                {s.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-forest-900 text-cream-200 py-8">
+        <div className="max-w-7xl mx-auto px-4 text-center text-sm">
+          <p>
+            &copy; {new Date().getFullYear()} Chaingang Cycling Club Abuja. 
+            CAC Reg: 163297. All rights reserved.
+          </p>
+          <p className="mt-2">
+            Built with ❤️ by the Chaingang community.
+          </p>
+        </div>
       </footer>
-    </div>
-  );
+    </main>
+  )
 }
+
+// Static content per PRD
+const values = [
+  {
+    title: 'Community',
+    description:
+      'We believe in the power of shared experience. Every rider, regardless of skill level, belongs. Our strength is in our diversity — from beginners to seasoned riders, we ride as one chain.',
+  },
+  {
+    title: 'Excellence',
+    description:
+      'We push ourselves and each other to be better — on the bike and off. We celebrate personal bests, support growth, and hold ourselves to high standards in everything we do.',
+  },
+  {
+    title: 'Adventure',
+    description:
+      "The FCT's trails are our playground. We explore, we discover, we push boundaries. Every ride is an opportunity to see Abuja from a new perspective — through dirt, sweat, and scenery.",
+  },
+  {
+    title: 'Service',
+    description:
+      'We ride for more than ourselves. Our free cycling clinics, community development projects, and youth engagement programmes ensure the next generation of Abuja riders has a path to follow.',
+  },
+]
+
+const activities = [
+  {
+    title: 'Saturday Group Ride',
+    schedule: 'Every Saturday, 7:00 AM',
+    description:
+      'Our flagship ride — 30-50km of off-road trails through the FCT. All skill levels welcome. Meet at the club start point.',
+  },
+  {
+    title: 'Wednesday Midweek Ride',
+    schedule: 'Every Wednesday, 7:00 PM',
+    description:
+      'Night ride with lights. Shorter, faster, and fun. Perfect midweek workout to keep the legs spinning.',
+  },
+  {
+    title: 'Free Cycling Clinics',
+    schedule: 'Last Saturday of each month',
+    description:
+      'Beginner-friendly skills sessions covering bike handling, trail etiquette, maintenance basics, and safety. Open to the public.',
+  },
+  {
+    title: 'Community Development',
+    schedule: 'Quarterly',
+    description:
+      'Trail maintenance, community clean-ups, and youth cycling programmes. Giving back to the communities we ride through.',
+  },
+  {
+    title: 'Club Socials',
+    schedule: 'Monthly',
+    description:
+      'Post-ride hangouts, BBQ sessions, film nights, and the occasional road trip. Because cycling is better with friends.',
+  },
+]
+
+const socialLinks = [
+  { label: 'Instagram', href: 'https://instagram.com/chaingangabuja' },
+  { label: 'Strava', href: 'https://strava.com/clubs/chaingangabuja' },
+  { label: 'Facebook', href: 'https://facebook.com/chaingangabuja' },
+  { label: 'Twitter / X', href: 'https://x.com/chaingangabuja' },
+]
