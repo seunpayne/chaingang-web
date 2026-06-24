@@ -1,6 +1,32 @@
--- Migration: 00001_initial_schema
+-- Migration: 00001_initial_schema (REORDERED)
 -- Creates all core tables, RLS policies, and helper functions
 -- Auth roles use user_roles table, NOT user_metadata
+
+-- ============================================================
+-- TABLE: user_roles (must be created BEFORE is_admin() function)
+-- ============================================================
+CREATE TABLE public.user_roles (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  role TEXT NOT NULL CHECK (role IN ('admin', 'member', 'revoked')),
+  granted_by UUID REFERENCES auth.users(id),
+  granted_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (user_id)
+);
+
+CREATE INDEX idx_user_roles_user_id ON public.user_roles(user_id);
+CREATE INDEX idx_user_roles_role ON public.user_roles(role);
+
+ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view own role"
+  ON public.user_roles FOR SELECT
+  USING (auth.uid() = user_id);
+
+CREATE POLICY "Service role can manage user_roles"
+  ON public.user_roles FOR ALL
+  USING (true)
+  WITH CHECK (true);
 
 -- ============================================================
 -- HELPER FUNCTION: Check if current user is admin
@@ -17,36 +43,6 @@ AS $$
     AND role = 'admin'
   );
 $$;
-
--- ============================================================
--- TABLE: user_roles
--- Server-set role assignments. NEVER client-settable.
--- ============================================================
-CREATE TABLE public.user_roles (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  role TEXT NOT NULL CHECK (role IN ('admin', 'member', 'revoked')),
-  granted_by UUID REFERENCES auth.users(id),
-  granted_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  UNIQUE (user_id)
-);
-
--- Index for role lookups
-CREATE INDEX idx_user_roles_user_id ON public.user_roles(user_id);
-CREATE INDEX idx_user_roles_role ON public.user_roles(role);
-
--- RLS: Only service role can insert/update/delete user_roles
--- Users can read their own role
-ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "Users can view own role"
-  ON public.user_roles FOR SELECT
-  USING (auth.uid() = user_id);
-
-CREATE POLICY "Service role can manage user_roles"
-  ON public.user_roles FOR ALL
-  USING (true)
-  WITH CHECK (true);
 
 -- ============================================================
 -- TABLE: news_posts
@@ -73,31 +69,26 @@ CREATE INDEX idx_news_posts_deleted_at ON public.news_posts(deleted_at) WHERE de
 
 ALTER TABLE public.news_posts ENABLE ROW LEVEL SECURITY;
 
--- Everyone can read published, non-deleted posts
 CREATE POLICY "Public can view published news"
   ON public.news_posts FOR SELECT
   USING (published = true AND deleted_at IS NULL);
 
--- Members can read all non-deleted posts
 CREATE POLICY "Members can view all news"
   ON public.news_posts FOR SELECT
   TO authenticated
   USING (deleted_at IS NULL);
 
--- Admin can create posts
 CREATE POLICY "Admin can create news"
   ON public.news_posts FOR INSERT
   TO authenticated
   WITH CHECK (public.is_admin());
 
--- Admin can update posts
 CREATE POLICY "Admin can update news"
   ON public.news_posts FOR UPDATE
   TO authenticated
   USING (public.is_admin())
   WITH CHECK (public.is_admin());
 
--- Admin can soft-delete posts (set deleted_at)
 CREATE POLICY "Admin can delete news"
   ON public.news_posts FOR DELETE
   TO authenticated
@@ -124,7 +115,6 @@ CREATE INDEX idx_announcements_type ON public.announcements(type);
 
 ALTER TABLE public.announcements ENABLE ROW LEVEL SECURITY;
 
--- Members can read active announcements (not expired, not deleted)
 CREATE POLICY "Members can view active announcements"
   ON public.announcements FOR SELECT
   TO authenticated
@@ -134,20 +124,17 @@ CREATE POLICY "Members can view active announcements"
     AND (expires_at IS NULL OR expires_at > now())
   );
 
--- Admin can create announcements
 CREATE POLICY "Admin can create announcements"
   ON public.announcements FOR INSERT
   TO authenticated
   WITH CHECK (public.is_admin());
 
--- Admin can update announcements
 CREATE POLICY "Admin can update announcements"
   ON public.announcements FOR UPDATE
   TO authenticated
   USING (public.is_admin())
   WITH CHECK (public.is_admin());
 
--- Admin can soft-delete announcements
 CREATE POLICY "Admin can delete announcements"
   ON public.announcements FOR DELETE
   TO authenticated
@@ -178,13 +165,11 @@ CREATE INDEX idx_leaderboard_rides ON public.leaderboard_cache(period_month, rid
 
 ALTER TABLE public.leaderboard_cache ENABLE ROW LEVEL SECURITY;
 
--- Members can read leaderboard data
 CREATE POLICY "Members can view leaderboard"
   ON public.leaderboard_cache FOR SELECT
   TO authenticated
   USING (true);
 
--- Service role can upsert (via Edge Function)
 CREATE POLICY "Service role can upsert leaderboard"
   ON public.leaderboard_cache FOR ALL
   USING (true)
@@ -211,26 +196,22 @@ CREATE INDEX idx_gallery_ride_tag ON public.gallery_photos(ride_tag);
 
 ALTER TABLE public.gallery_photos ENABLE ROW LEVEL SECURITY;
 
--- Members can view non-deleted photos
 CREATE POLICY "Members can view gallery"
   ON public.gallery_photos FOR SELECT
   TO authenticated
   USING (deleted_at IS NULL);
 
--- Admin can create photos
 CREATE POLICY "Admin can upload photos"
   ON public.gallery_photos FOR INSERT
   TO authenticated
   WITH CHECK (public.is_admin());
 
--- Admin can update photos
 CREATE POLICY "Admin can update photos"
   ON public.gallery_photos FOR UPDATE
   TO authenticated
   USING (public.is_admin())
   WITH CHECK (public.is_admin());
 
--- Admin can soft-delete photos
 CREATE POLICY "Admin can delete photos"
   ON public.gallery_photos FOR DELETE
   TO authenticated
@@ -252,13 +233,11 @@ CREATE INDEX idx_sync_log_ran_at ON public.sync_log(ran_at DESC);
 
 ALTER TABLE public.sync_log ENABLE ROW LEVEL SECURITY;
 
--- Members can read sync log (for last sync display)
 CREATE POLICY "Members can view sync log"
   ON public.sync_log FOR SELECT
   TO authenticated
   USING (true);
 
--- Service role can insert (via Edge Function)
 CREATE POLICY "Service role can insert sync log"
   ON public.sync_log FOR INSERT
   WITH CHECK (true);
@@ -281,24 +260,20 @@ CREATE INDEX idx_member_invites_email ON public.member_invites(email);
 
 ALTER TABLE public.member_invites ENABLE ROW LEVEL SECURITY;
 
--- Admin can view all invites
 CREATE POLICY "Admin can view invites"
   ON public.member_invites FOR SELECT
   TO authenticated
   USING (public.is_admin());
 
--- Admin can create invites
 CREATE POLICY "Admin can create invites"
   ON public.member_invites FOR INSERT
   TO authenticated
   WITH CHECK (public.is_admin());
 
--- Unauthenticated users need to validate tokens for registration
 CREATE POLICY "Anyone can read invites for token validation"
   ON public.member_invites FOR SELECT
   USING (true);
 
--- Service role can update (mark consumed)
 CREATE POLICY "Service role can update invites"
   ON public.member_invites FOR UPDATE
   USING (true)
@@ -317,20 +292,18 @@ CREATE TABLE public.instagram_tokens (
 
 ALTER TABLE public.instagram_tokens ENABLE ROW LEVEL SECURITY;
 
--- Admin can view token status
 CREATE POLICY "Admin can view instagram tokens"
   ON public.instagram_tokens FOR SELECT
   TO authenticated
   USING (public.is_admin());
 
--- Service role can manage tokens (via Edge Function)
 CREATE POLICY "Service role can manage instagram tokens"
   ON public.instagram_tokens FOR ALL
   USING (true)
   WITH CHECK (true);
 
 -- ============================================================
--- TABLE: member_strava_tokens (Phase 2 scaffold — empty at launch)
+-- TABLE: member_strava_tokens (Phase 2 scaffold)
 -- ============================================================
 CREATE TABLE public.member_strava_tokens (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -350,20 +323,18 @@ CREATE INDEX idx_member_strava_tokens_user ON public.member_strava_tokens(user_i
 
 ALTER TABLE public.member_strava_tokens ENABLE ROW LEVEL SECURITY;
 
--- Users can view their own Strava tokens
 CREATE POLICY "Users can view own strava tokens"
   ON public.member_strava_tokens FOR SELECT
   TO authenticated
   USING (auth.uid() = user_id);
 
--- Service role can manage (via Edge Function in Phase 2)
 CREATE POLICY "Service role can manage strava tokens"
   ON public.member_strava_tokens FOR ALL
   USING (true)
   WITH CHECK (true);
 
 -- ============================================================
--- FUNCTION: Automatically update updated_at timestamp
+-- FUNCTION: Auto-update updated_at timestamp
 -- ============================================================
 CREATE OR REPLACE FUNCTION public.update_updated_at_column()
 RETURNS trigger
@@ -387,7 +358,7 @@ CREATE TRIGGER update_announcements_updated_at
   FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 
 -- ============================================================
--- FUNCTION: Auto-generate slug from title (for news_posts)
+-- FUNCTION: Auto-generate slug from title
 -- ============================================================
 CREATE OR REPLACE FUNCTION public.generate_slug(title TEXT)
 RETURNS TEXT
@@ -405,15 +376,9 @@ AS $$
 $$;
 
 -- ============================================================
--- STORAGE BUCKETS: Create via Supabase dashboard or API
--- Run these manually after migration:
--- 1. Gallery bucket: public, file_size_limit=50000000 (50MB)
--- 2. News-covers bucket: public, file_size_limit=10000000 (10MB)
+-- STORAGE BUCKETS
 -- ============================================================
--- Supabase Storage Buckets Setup
--- Run these commands in Supabase SQL Editor after initial migration
 
--- Create storage buckets
 INSERT INTO storage.buckets (id, name, public, file_size_limit)
 VALUES
   ('gallery', 'gallery', true, 50000000),
